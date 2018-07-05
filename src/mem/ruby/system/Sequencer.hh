@@ -158,7 +158,7 @@ class Sequencer : public RubyPort
                      const Cycles forwardRequestTime,
                      const Cycles firstResponseTime);
 
-    void recordMissLatency(SequencerRequest* srequest,const Cycles t, const RubyRequestType type,
+    void recordMissLatency(const Cycles t, const RubyRequestType type,
                            const MachineType respondingMach,
                            bool isExternalHit, Cycles issuedTime,
                            Cycles initialRequestTime,
