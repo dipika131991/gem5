@@ -63,13 +63,13 @@ def _listPlatformTypes(option, opt, value, parser):
 # being used, and consequently no CPUs, but rather various types of
 # testers and traffic generators.
 def addNoISAOptions(parser):
-    parser.add_option("-n", "--num-cpus", type="int", default=64)
+    parser.add_option("-n", "--num-cpus", type="int", default=1)
     parser.add_option("--sys-voltage", action="store", type="string",
                       default='1.0V',
                       help = """Top-level voltage for blocks running at system
                       power supply""")
     parser.add_option("--sys-clock", action="store", type="string",
-                      default='2GHz',
+                      default='1GHz',
                       help = """Top-level clock for blocks running at system
                       speed""")
 
@@ -85,7 +85,7 @@ def addNoISAOptions(parser):
     parser.add_option("--mem-ranks", type="int", default=None,
                       help = "number of memory ranks per channel")
     parser.add_option("--mem-size", action="store", type="string",
-                      default="4GB",
+                      default="512MB",
                       help="Specify the physical memory size (single memory)")
     parser.add_option("--memchecker", action="store_true")
 
@@ -99,13 +99,13 @@ def addNoISAOptions(parser):
     parser.add_option("--num-dirs", type="int", default=1)
     parser.add_option("--num-l2caches", type="int", default=1)
     parser.add_option("--num-l3caches", type="int", default=1)
-    parser.add_option("--l1d_size", type="string", default="32kB")
+    parser.add_option("--l1d_size", type="string", default="64kB")
     parser.add_option("--l1i_size", type="string", default="32kB")
-    parser.add_option("--l2_size", type="string", default="32MB")
+    parser.add_option("--l2_size", type="string", default="2MB")
     parser.add_option("--l3_size", type="string", default="16MB")
-    parser.add_option("--l1d_assoc", type="int", default=4)
-    parser.add_option("--l1i_assoc", type="int", default=4)
-    parser.add_option("--l2_assoc", type="int", default=16)
+    parser.add_option("--l1d_assoc", type="int", default=2)
+    parser.add_option("--l1i_assoc", type="int", default=2)
+    parser.add_option("--l2_assoc", type="int", default=8)
     parser.add_option("--l3_assoc", type="int", default=16)
     parser.add_option("--cacheline_size", type="int", default=64)
 

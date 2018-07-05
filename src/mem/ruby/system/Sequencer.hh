@@ -60,8 +60,7 @@ class Sequencer : public RubyPort
     typedef RubySequencerParams Params;
     Sequencer(const Params *);
     ~Sequencer();
-//manju
-int miss_c;
+
     // Public Methods
     void wakeup(); // Used only for deadlock detection
     void resetStats();
@@ -201,8 +200,6 @@ int miss_c;
     Stats::Scalar m_load_waiting_on_load;
 
     int m_coreId;
-
-    char mode; //Added by Abhijit
 
     bool m_runningGarnetStandalone;
 

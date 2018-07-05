@@ -36,8 +36,6 @@
 #include "debug/ProtocolTrace.hh"
 #include "debug/RubySequencer.hh"
 #include "debug/RubyStats.hh"
-#include "debug/ADTrace.hh" //Added by Abhijit
-#include "debug/MRTrace.hh" // Added  by Manju
 #include "mem/packet.hh"
 #include "mem/protocol/PrefetchBit.hh"
 #include "mem/protocol/RubyAccessMode.hh"
@@ -312,50 +310,17 @@ Sequencer::handleLlsc(Addr address, SequencerRequest* request)
 }
 
 void
-Sequencer::recordMissLatency(SequencerRequest* srequest, const Cycles cycles, const RubyRequestType type,
+Sequencer::recordMissLatency(const Cycles cycles, const RubyRequestType type,
                              const MachineType respondingMach,
                              bool isExternalHit, Cycles issuedTime,
                              Cycles initialRequestTime,
                              Cycles forwardRequestTime,
                              Cycles firstResponseTime, Cycles completionTime)
-{
-    //Cycles isTime=issuedTime;
-     
-        m_latencyHist.sample(cycles);
+{     
+    m_latencyHist.sample(cycles);
     m_typeLatencyHist[type]->sample(cycles);
 
     if (isExternalHit) {
-//manju-- to display L1 cache miss (both data and instruction) along with it address
-			PacketPtr pkt = srequest->pkt;
-   			//Addr request_address(pkt->getAddr());
-
-			//cout<< "test in miss record"<<printAddress(request_address)<<endl;
-
-			
-			if (RubyRequestType_to_string(type) == "IFETCH")
-       			 mode = 'F';
-    			else if (RubyRequestType_to_string(type) == "LD")
-       			 mode = 'L';
-    			else if(RubyRequestType_to_string(type) == "ST")
-       			 mode = 'S';
-
-			 miss_c++;	//count the number of misses (data and instn)
-
-			//cout<<".."<<name()<<"...."<<miss_c<<endl; // Display the info along with the controller name 
-
-			/* DPRINTFR(MRTrace, "%10s %15s %10s \t %#x %10s %10s %10s\n",
-        		curTick(), curCycle(), m_version, pkt->getAddr(),
-       			 mode, pkt->isWrite() ? "W" : "R",miss_c);*/
-
-			 DPRINTFR(MRTrace, "%10s %10s \t %#x %10s \n",issuedTime,
-        		 m_version, pkt->getAddr(),
-       			  pkt->isWrite() ? "W" : "R");
-	
-	
-			//Cycles total_latency = curCycle() - isTime;
-	   		// DPRINTFR(MRTrace, "%15s %13s% %d 10%s\n",curTick(), m_version,mode,miss_c);*/
-//.............manju
-
         m_missLatencyHist.sample(cycles);
         m_missTypeLatencyHist[type]->sample(cycles);
 
@@ -490,13 +455,8 @@ Sequencer::hitCallback(SequencerRequest* srequest, DataBlock& data,
     assert(curCycle() >= issued_time);
     Cycles total_latency = curCycle() - issued_time;
 
-//manju
-   //  cout<< "test in hit cal back"<<printAddress(request_address)<<"Current cycle"<<curCycle()<<endl;
-/*DPRINTFR(ADTrace,"Core No  %10s HITCALL BACK %15s Current cycle %15s \n",m_version,printAddress(request_address),curCycle());*/
-
     // Profile the latency for all demand accesses.
-//manju added one more parameter srequest in recordMissLatency
-    recordMissLatency(srequest,total_latency, type, mach, externalHit, issued_time,
+    recordMissLatency(total_latency, type, mach, externalHit, issued_time,
                       initialRequestTime, forwardRequestTime,
                       firstResponseTime, curCycle());
 
@@ -690,25 +650,6 @@ Sequencer::issueRequest(PacketPtr pkt, RubyRequestType secondary_type)
             curTick(), m_version, "Seq", "Begin", "", "",
             printAddress(msg->getPhysicalAddress()),
             RubyRequestType_to_string(secondary_type));
-
-/* DPRINTF(ADTrace, "%15s %3s %#x %#x %3s %s\n",
-            curCycle(), m_version, pkt->getAddr(),
-            printAddress(msg->getPhysicalAddress()),
-            pkt->isWrite() ? "W" : "R",
-            RubyRequestType_to_string(secondary_type));*/
-
- 
-           
-    if (RubyRequestType_to_string(secondary_type) == "IFETCH")
-        mode = 'F';
-    else if (RubyRequestType_to_string(secondary_type) == "LD")
-        mode = 'L';
-    else
-        mode = 'S';
-
-    DPRINTFR(ADTrace, "%10s %10s \t %#x %10s\n",curCycle(),
-         m_version, pkt->getAddr(),
-         pkt->isWrite() ? "W" : "R");
 
     // The Sequencer currently assesses instruction and data cache hit latency
     // for the top-level caches at the beginning of a memory access.
