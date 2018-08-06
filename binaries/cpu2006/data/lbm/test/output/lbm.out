@@ -1,0 +1,8 @@
+MAIN_printInfo:
+	grid size      : 100 x 100 x 130 = 1.30 * 10^6 Cells
+	nTimeSteps     : 20
+	result file    : reference.dat
+	action         : nothing
+	simulation type: channel flow
+	obstacle file  : /home/rise/tripti/cpu2006/data/lbm/test/input/100_100_130_cf_a.of
+
